@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { HiShoppingBag } from "react-icons/hi";
 import { BiPencil } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { login, logout } from "../api/firebase";
 
 export default function Navbar() {
+  const [user, setUser] = useState();
+  const handleLogin = () => {
+    login().then(setUser);
+  };
+  const handleLogout = () => {
+    logout().then(setUser);
+  };
   return (
-    <header>
+    <Header>
       <Link to="/">
         <HiShoppingBag />
         <h1>Shoppy</h1>
@@ -16,8 +25,19 @@ export default function Navbar() {
         <Link to="/products/new">
           <BiPencil />
         </Link>
-        <button>Login</button>
+        {!user && <button onClick={handleLogin}>Login</button>}
+        {user && <button onClick={handleLogout}>Logout</button>}
       </nav>
-    </header>
+    </Header>
   );
 }
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+`;
+
+// const Link = styled.link`
+//   display: flex;
+//   align-items: center;
+// `;
